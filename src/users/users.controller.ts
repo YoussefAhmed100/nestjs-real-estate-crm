@@ -36,7 +36,7 @@ export class UsersController {
   @ApiOkResponse({ type: [UserResponseDto] })
  
   @Get()
-  async findAll(@Query() query: buildQueryDto) {
+  async findAll(@Query() query: BuildQueryDto) {
     return this.usersService.findAll(query);
   }
 

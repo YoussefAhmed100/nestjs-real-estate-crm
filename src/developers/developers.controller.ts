@@ -11,7 +11,7 @@ import {
 import { DevelopersService } from './developers.service';
 import { CreateDeveloperDto } from './dto/create-developer.dto';
 import { UpdateDeveloperDto } from './dto/update-developer.dto';
-import { buildQueryDto } from 'src/common/dto/base-query.dto';
+import { BuildQueryDto } from 'src/common/dto/base-query.dto';
 
 @ApiTags('Developers')
 @Controller('developers')
@@ -28,7 +28,7 @@ export class DevelopersController {
   @ApiOperation({ summary: 'Get all developers' })
   @ApiOkResponse({ description: 'Return developers list' })
   @Get()
-  findAll(@Query() query: buildQueryDto) {
+  findAll(@Query() query: BuildQueryDto) {
     return this.developersService.findAll(query);
   }
 
@@ -70,7 +70,7 @@ export class DevelopersController {
   @ApiParam({ name: 'id', description: 'Developer ID' })
   @ApiOkResponse({ description: 'Developer deleted successfully' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.developersService.remove(id);
+  delete(@Param('id') id: string) {
+    return this.developersService.delete(id);
   }
 }
