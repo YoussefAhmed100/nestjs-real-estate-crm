@@ -27,7 +27,7 @@ import { ParseObjectIdPipe } from '@nestjs/mongoose';
 
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
-@Roles('superadmin', 'admin')
+@Roles('super_admin', 'admin')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
@@ -55,13 +55,19 @@ export class UsersController {
     return this.usersService.updateUser(id, dto);
   }
 // Soft Delete - Admin Only
+  @ApiOperation({ summary: 'Deactivate user' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiOkResponse({ description: 'User deactivated successfully' })
   @Delete(':id')
   async softDelete(@Param('id', ParseObjectIdPipe) id: string) {
     return this.usersService.softDelete(id);
   }
 
   // hard delete - Admin Only
-  @Delete(':id/hard')
+  @ApiOperation({ summary: 'Delete user permanently' })
+  @ApiParam({ name: 'id', description: 'User ID' })
+  @ApiOkResponse({ description: 'User deleted successfully' })
+  @Delete(':id/delete')
   async hardDelete(@Param('id',ParseObjectIdPipe) id: string) {
     return this.usersService.hardDelete(id);
 
