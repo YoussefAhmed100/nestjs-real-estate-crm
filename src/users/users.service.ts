@@ -85,7 +85,7 @@ return UserResponseDto.fromEntity(user);
 
 async findAll(query: buildQueryDto) {
   const features = new ApiFeatures(
-    this.userModel.find({ active: true }),
+    this.userModel.find(),
     query,
   )
     .filter()
