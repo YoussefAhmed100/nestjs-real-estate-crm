@@ -10,6 +10,7 @@ import { DevelopersModule } from './developers/developers.module';
 import { ProjectsModule } from './projects/projects.module';
 import { StorageModule } from './common/storage/storage.module';
 import { UnitsModule } from './units/units.module';
+import { DealsModule } from './deals/deals.module';
 
 
 @Module({
@@ -36,7 +37,8 @@ import { UnitsModule } from './units/units.module';
     DevelopersModule,
     ProjectsModule,
     StorageModule,
-    UnitsModule
+    UnitsModule,
+    DealsModule
  
   ],
 })
