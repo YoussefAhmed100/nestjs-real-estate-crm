@@ -39,7 +39,7 @@ export class AreasService {
 
   // ***************************************
   async findAll(query: buildQueryDto) {
-    const features = new ApiFeatures(this.areaModel.find(), query)
+    const features = new ApiFeatures(this.areaModel.find().populate('project', 'name -_id'), query)
       .filter()
       .search(['name']);
 
