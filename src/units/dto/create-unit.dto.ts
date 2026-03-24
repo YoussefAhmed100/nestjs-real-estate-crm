@@ -121,7 +121,15 @@ export class CreateUnitDto {
   })
   @IsOptional()
   @IsEnum(UnitStatus)
-  status?: UnitStatus;
+  status: UnitStatus;
+
+ @ApiPropertyOptional({
+    description: 'notes',
+  })
+  @IsOptional()
+  notes:string
+
+
 
   // ================= APARTMENT =================
 
@@ -129,9 +137,7 @@ export class CreateUnitDto {
     example: 12,
     description: 'Required if type = apartment',
   })
-  @ValidateIf((o) => o.type === UnitType.APARTMENT)
-  @IsNotEmpty()
-  @Type(() => Number)
+  @IsOptional()
   @IsNumber()
   apartmentNumber?: number;
 
@@ -139,8 +145,7 @@ export class CreateUnitDto {
     example: 'B1',
     description: 'Required if type = apartment',
   })
-  @ValidateIf((o) => o.type === UnitType.APARTMENT)
-  @IsNotEmpty()
+ @IsOptional()
   @IsString()
   building?: string;
 
@@ -150,8 +155,7 @@ export class CreateUnitDto {
     example: 'Block A',
     description: 'Required if type = villa',
   })
-  @ValidateIf((o) => o.type === UnitType.VILLA)
-  @IsNotEmpty()
+ @IsOptional()
   @IsString()
   block?: string;
 
@@ -159,8 +163,7 @@ export class CreateUnitDto {
     example: 'Villa 12',
     description: 'Required if type = villa',
   })
-  @ValidateIf((o) => o.type === UnitType.VILLA)
-  @IsNotEmpty()
+ @IsOptional()
   @IsString()
   villaNumber?: string;
 }
