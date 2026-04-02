@@ -11,14 +11,14 @@ export class Unit {
   @Prop({ type: Types.ObjectId, ref: 'Project', required: true, index: true })
   project: Types.ObjectId;
 
-  @Prop({ required: true, trim: true, unique: true ,index: true})
+  @Prop({ required: true, trim: true, unique: true, index: true })
   unitCode: string;
 
   @Prop({
     type: String,
     enum: UnitType,
     required: true,
-    index: true
+    index: true,
   })
   type: UnitType;
 
@@ -32,13 +32,13 @@ export class Unit {
   @Prop({ required: true, min: 0 })
   price: number;
 
-@Prop({
-  type: Types.ObjectId,
-  ref: 'Area',
-  required: true,
-  index: true,
-})
-area: Types.ObjectId;
+  @Prop({
+    type: Types.ObjectId,
+    ref: 'Area',
+    required: true,
+    index: true,
+  })
+  area: Types.ObjectId;
 
   @Prop({ min: 0 })
   floor: number;
@@ -66,12 +66,11 @@ area: Types.ObjectId;
 
   @Prop({ required: true, min: 0 })
   size: number;
-  @Prop({ type: [String],required:true})
+  @Prop({ type: [String], required: true })
   images: string[];
-  
-   @Prop({default:Date.now})
-    createdAt:Date
 
+  @Prop({ default: Date.now })
+  createdAt: Date;
 
   @Prop()
   group: string;
@@ -84,8 +83,9 @@ area: Types.ObjectId;
 
   @Prop()
   villaNumber: string;
+  
+  @Prop()
+  notes: string;
 }
 
 export const UnitSchema = SchemaFactory.createForClass(Unit);
-
-
