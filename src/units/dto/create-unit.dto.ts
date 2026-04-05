@@ -68,6 +68,20 @@ export class CreateUnitDto {
   @Exists('Area')
   area: string;
 
+  @ApiPropertyOptional({
+    example: 'Cash',
+  })
+  @IsOptional()
+  @IsString()
+  paymentType?: string;
+
+  @ApiProperty({
+    example: 'John Doe',
+  })
+  @IsNotEmpty()
+  @IsString()
+  createdBy: string;
+
   // ================= COMMON =================
 
   @ApiPropertyOptional({
@@ -127,6 +141,7 @@ export class CreateUnitDto {
     description: 'notes',
   })
   @IsOptional()
+  @IsString()
   notes:string
 
 
@@ -148,6 +163,9 @@ export class CreateUnitDto {
  @IsOptional()
   @IsString()
   building?: string;
+   @IsOptional()
+  @IsString()
+  group: string;
 
   // ================= VILLA =================
 
