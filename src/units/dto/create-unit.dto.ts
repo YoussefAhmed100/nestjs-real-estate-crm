@@ -137,14 +137,12 @@ export class CreateUnitDto {
   @IsEnum(UnitStatus)
   status: UnitStatus;
 
- @ApiPropertyOptional({
+  @ApiPropertyOptional({
     description: 'notes',
   })
   @IsOptional()
   @IsString()
-  notes:string
-
-
+  notes: string;
 
   // ================= APARTMENT =================
 
@@ -160,10 +158,10 @@ export class CreateUnitDto {
     example: 'B1',
     description: 'Required if type = apartment',
   })
- @IsOptional()
+  @IsOptional()
   @IsString()
   building?: string;
-   @IsOptional()
+  @IsOptional()
   @IsString()
   group: string;
 
@@ -173,7 +171,7 @@ export class CreateUnitDto {
     example: 'Block A',
     description: 'Required if type = villa',
   })
- @IsOptional()
+  @IsOptional()
   @IsString()
   block?: string;
 
@@ -181,7 +179,7 @@ export class CreateUnitDto {
     example: 'Villa 12',
     description: 'Required if type = villa',
   })
- @IsOptional()
+  @IsOptional()
   @IsString()
   villaNumber?: string;
 }
