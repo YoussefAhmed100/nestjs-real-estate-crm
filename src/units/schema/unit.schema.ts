@@ -86,6 +86,11 @@ export class Unit {
   size: number;
   @Prop({ type: [String], required: true })
   images: string[];
+   @Prop({ type:String })
+  coverImage: string;
+   
+
+
 
   @Prop({ default: Date.now })
   createdAt: Date;

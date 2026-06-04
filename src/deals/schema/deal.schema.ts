@@ -49,6 +49,13 @@ export class Deal {
   })
   client: Types.ObjectId;
 
+    @Prop({
+    type: Types.ObjectId,
+    ref: 'Client',
+    required: true,
+  })
+  buyer: Types.ObjectId;
+
   @Prop({ trim: true })
   notes: string;
   @Prop({default:Date.now})
