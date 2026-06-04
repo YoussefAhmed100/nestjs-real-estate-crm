@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
-import { Deal, DealDocument} from './schema/deal.schema';
+import { Deal, DealDocument } from './schema/deal.schema';
 import { Unit, UnitDocument } from '../units/schema/unit.schema';
 import { UnitStatus } from '../units/enums/unit-status.enum';
 
@@ -36,44 +36,44 @@ export class DealsService {
     }
 
     const deal = await this.dealModel.create({
-        ...createDealDto,
-    client: new Types.ObjectId(createDealDto.client),
-    unit: new Types.ObjectId(createDealDto.unit)
+      ...createDealDto,
+      client: new Types.ObjectId(createDealDto.client),
+      unit: new Types.ObjectId(createDealDto.unit),
     });
- if (createDealDto.status === 'CLOSED_WON') {
-  await this.unitModel.updateOne(
-    { _id: createDealDto.unit },
-    {
-      status: UnitStatus.SOLD,
-      client: createDealDto.client,
+    if (createDealDto.status === 'CLOSED_WON') {
+      await this.unitModel.updateOne(
+        { _id: createDealDto.unit },
+        {
+          status: UnitStatus.SOLD,
+          client: createDealDto.client,
+        },
+      );
     }
-  );
-}
     return deal;
   }
-async findAll(queryDto: buildQueryDto) {
-  const mongooseQuery = this.dealModel
-    .find()
-    .populate('unit', 'images unitCode type -_id')
-    .populate('salesAgent', 'fullName -_id')
-    .populate('client', 'fullName -_id');
+  async findAll(queryDto: buildQueryDto) {
+    const mongooseQuery = this.dealModel
+      .find()
+      .populate('unit', 'images unitCode type -_id')
+      .populate('salesAgent', 'fullName -_id')
+      .populate('client', 'fullName -_id');
 
-  const features = new ApiFeatures(mongooseQuery, queryDto)
-    .filter()
-    .search(['unitCode', 'type']);
+    const features = new ApiFeatures(mongooseQuery, queryDto)
+      .filter()
+      .search(['unitCode', 'type']);
 
-  const total = await features.count();
+    const total = await features.count();
 
-  features.sort().limitFields().paginate(total);
+    features.sort().limitFields().paginate(total);
 
-  const data = await features.exec();
+    const data = await features.exec();
 
-  return {
-    results: data.length,
-    pagination: features.paginationResult,
-    data,
-  };
-} 
+    return {
+      results: data.length,
+      pagination: features.paginationResult,
+      data,
+    };
+  }
 
   // find one deal with populated unit and sales agent
   async findOne(id: string): Promise<Deal> {
@@ -81,7 +81,8 @@ async findAll(queryDto: buildQueryDto) {
       .findById(id)
       .populate('unit', 'images unitCode type ')
       .populate('salesAgent', 'fullName ')
-      .populate('client', 'fullName ');
+      .populate('client', 'fullName ')
+      .populate('buyer', 'fullName ');
 
     if (!deal) {
       throw new NotFoundException('Deal not found');
@@ -120,37 +121,36 @@ async findAll(queryDto: buildQueryDto) {
     }
 
     deal.status = dto.status;
-    
+
     return deal.save();
   }
 
   // -----------------------
-async update(id: string, updateDealDto: UpdateDealDto) {
-  const deal = await this.dealModel.findById(id);
+  async update(id: string, updateDealDto: UpdateDealDto) {
+    const deal = await this.dealModel.findById(id);
 
-  if (!deal) {
-    throw new NotFoundException('Deal not found');
+    if (!deal) {
+      throw new NotFoundException('Deal not found');
+    }
+
+    if (updateDealDto.status) {
+      throw new BadRequestException(
+        'Use status endpoint to update deal status',
+      );
+    }
+
+    if (updateDealDto.client) {
+      updateDealDto.client = new Types.ObjectId(updateDealDto.client) as any;
+    }
+
+    if (updateDealDto.unit) {
+      updateDealDto.unit = new Types.ObjectId(updateDealDto.unit) as any;
+    }
+
+    Object.assign(deal, updateDealDto);
+
+    return deal.save();
   }
-
-  if (updateDealDto.status) {
-    throw new BadRequestException(
-      'Use /status endpoint to update deal status',
-    );
-  }
-
-  
-  if (updateDealDto.client) {
-    updateDealDto.client = new Types.ObjectId(updateDealDto.client) as any;
-  }
-
-  if (updateDealDto.unit) {
-    updateDealDto.unit = new Types.ObjectId(updateDealDto.unit) as any;
-  }
-
-  Object.assign(deal, updateDealDto);
-
-  return deal.save();
-}
 
   // delete deal and set unit back to available if not closed won
   async remove(id: string): Promise<{ message: string }> {
