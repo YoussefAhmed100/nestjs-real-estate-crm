@@ -26,7 +26,7 @@ export class Area {
   })
   description?: string;
 
-  @Prop({ required: true, trim: true })
+  @Prop({ required: true, trim: true, lowercase: true })
   location: string;
   @Prop({ type: String, trim: true })
    createdBy: string;
