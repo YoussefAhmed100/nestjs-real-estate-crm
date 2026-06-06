@@ -26,8 +26,8 @@ export class CreateUnitDto {
   @IsNotEmpty()
   @Exists('Project')
   project: string;
-  
- @ApiProperty({
+
+  @ApiProperty({
     example: 'unit title ',
     maxLength: 20,
   })
@@ -71,11 +71,10 @@ export class CreateUnitDto {
     example: '65a1b2c3d4e5f6',
     description: 'Area ID',
   })
-  
   @IsNotEmpty()
   @Exists('Area')
   area: string;
-   @ApiProperty({
+  @ApiProperty({
     example: '65a1b2c3d4e5f6',
     description: 'Client ID',
   })
@@ -117,14 +116,13 @@ export class CreateUnitDto {
   })
   @IsOptional()
   @IsString()
-  @MaxLength(50)
+  @MaxLength(100)
   location?: string;
 
   @ApiPropertyOptional({
     example: 12,
   })
   @IsOptional()
-  
   @Min(0)
   apartmentNumber?: number;
 
@@ -171,8 +169,6 @@ export class CreateUnitDto {
 
   // ================= APARTMENT =================
 
-
-
   @ApiPropertyOptional({
     example: 'B1',
     description: 'Required if type = apartment',
@@ -202,17 +198,17 @@ export class CreateUnitDto {
     description: 'Required if type = villa',
   })
   @IsOptional()
-   @Type(() => Number)
+  @Type(() => Number)
   @IsNumber()
   @Min(0)
   villaNumber?: number;
 
-   @ApiProperty({
+  @ApiProperty({
     example: '50000',
     description: 'Amount already paid',
   })
-   @IsOptional()
-   @Type(() => Number)
+  @IsOptional()
+  @Type(() => Number)
   @IsNumber()
   @Min(0)
   paidAmount: number;
@@ -222,7 +218,7 @@ export class CreateUnitDto {
     description: 'Remaining amount to be paid',
   })
   @IsOptional()
-   @Type(() => Number)
+  @Type(() => Number)
   @IsNumber()
   @Min(0)
   remainingAmount: number;
@@ -232,7 +228,7 @@ export class CreateUnitDto {
     description: 'Type of villa',
   })
   @IsString()
-    @IsOptional()
+  @IsOptional()
   villaType: string;
 
   @ApiProperty({
@@ -249,9 +245,14 @@ export class CreateUnitDto {
     description: 'Amount requested by the client',
   })
   @IsOptional()
-   @Type(() => Number)
+  @Type(() => Number)
   @IsNumber()
   @Min(0)
-
   requestedAmount: number;
+  @ApiProperty({
+    example: '3D model URL or file path',
+  })
+  @IsOptional()
+  @IsString()
+  model: string;
 }

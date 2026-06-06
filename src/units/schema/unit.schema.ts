@@ -46,7 +46,7 @@ export class Unit {
   @Prop({ min: 0 })
   floor: number;
 
-  @Prop({ type: String, trim: true })
+  @Prop({ type: String, trim: true, lowercase: true })
   location: string;
 
   @Prop({ min: 0 })
@@ -86,22 +86,19 @@ export class Unit {
   size: number;
   @Prop({ type: [String], required: true })
   images: string[];
-   @Prop({ type:String })
+  @Prop({ type: String })
   coverImage: string;
-   
-
-
 
   @Prop({ default: Date.now })
   createdAt: Date;
 
-  @Prop()
+  @Prop({ type: String })
   group: string;
 
-  @Prop()
+  @Prop({ type: String })
   building: string;
 
-  @Prop()
+  @Prop({ type: String })
   block: string;
 
   @Prop({ type: Number, min: 0 })
@@ -125,6 +122,9 @@ export class Unit {
   phase: string;
   @Prop({ type: Boolean, default: false, index: true })
   showInWebsite: boolean;
+
+  @Prop({ type: String })
+  model: string;
 }
 
 export const UnitSchema = SchemaFactory.createForClass(Unit);
