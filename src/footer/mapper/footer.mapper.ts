@@ -5,7 +5,7 @@ export class FooterMapper {
         return {
      phone: contact.phone,
       email: contact.email,
-      address: contact.address,
+      address: contact.location.address,
       socialMedia: contact.socialMedia,
         };
     }

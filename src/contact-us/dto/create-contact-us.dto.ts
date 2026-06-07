@@ -3,7 +3,6 @@ import {
   IsEmail,
   IsNotEmpty,
   IsString,
-  Length,
   ValidateNested,
   IsOptional,
 } from 'class-validator';
@@ -11,6 +10,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsInternationalPhoneNumber } from 'src/common/validators/is-phone.validator';
 import { CreateSocialMediaDto } from './sections/create-social-media.dto';
 import { CreatePhoneNumberDto } from './sections/create-phoneNumber.dto';
+import { CreateCeoInfoDto } from './sections/ceo.dto';
+import { LocationDto } from './sections/locations.dto';
 
 export class CreateContactUsDto {
   @ApiProperty({ type: CreatePhoneNumberDto })
@@ -39,10 +40,7 @@ export class CreateContactUsDto {
   @ApiProperty({
     example: 'Cairo, Egypt - Nasr City',
   })
-  @IsString()
-  @IsNotEmpty()
-  @Length(5, 500)
-  address: string;
+
 
   @ApiProperty({
     example: 'Saturday - Thursday',
@@ -70,4 +68,16 @@ export class CreateContactUsDto {
   @ValidateNested()
   @Type(() => CreateSocialMediaDto)
   socialMedia: CreateSocialMediaDto;
+
+  @ApiProperty({ type: CreateCeoInfoDto })
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => CreateCeoInfoDto)
+  ceoInfo: CreateCeoInfoDto;
+
+  @ApiProperty({ type: LocationDto })
+  @IsNotEmpty()
+  @ValidateNested()
+  @Type(() => LocationDto)
+  location: LocationDto;
 }

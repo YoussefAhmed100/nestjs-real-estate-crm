@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, HydratedDocument } from 'mongoose';
+import {  HydratedDocument } from 'mongoose';
 import { SocialMedia } from './sections/social-media.schema';
 import { PhoneNumber } from './sections/phone-number.schema';
+import { CeoInfo } from './sections/ceo.schema';
+import { Location } from './sections/location.schema';
 
 export type ContactDocument = HydratedDocument<Contact>;
 
@@ -12,7 +14,6 @@ export type ContactDocument = HydratedDocument<Contact>;
 export class Contact {
     
    @Prop({
-    trim: true,
     type: PhoneNumber,
       
   })
@@ -31,11 +32,7 @@ export class Contact {
   })
   whatsapp: string;
 
-  @Prop({
-    required: true,
-    trim: true,
-  })
-  address: string;
+ 
 
   @Prop({
     trim: true,
@@ -61,6 +58,15 @@ export class Contact {
       
   })
   socialMedia: SocialMedia;
+ @Prop({
+    type: CeoInfo,
+ })
+  ceoInfo:CeoInfo
+
+  @Prop({
+    type: Location,
+  })
+  location: Location;
 }
 
 export const ContactSchema = SchemaFactory.createForClass(Contact);
