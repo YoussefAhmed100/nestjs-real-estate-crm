@@ -1,4 +1,4 @@
-import { Document, Query } from 'mongoose';
+import { Document, Query, Types } from 'mongoose';
 import { IPaginationResult } from '../contracts/pagination.interfaces';
 import { IQueryBuilder } from '../contracts/query-builder.interface';
 
@@ -16,15 +16,17 @@ export class ApiFeatures<T> implements IQueryBuilder<T> {
     this.queryString = queryString;
   }
 
+
 filter(): this {
   const excluded = ['page', 'sort', 'limit', 'fields', 'keyword'];
+
+  const objectIdFields = ['area', 'project', 'client', 'unit', 'salesAgent', 'assignedTo'];
 
   const queryObj = Object.keys(this.queryString)
     .filter((key) => !excluded.includes(key))
     .reduce((acc, key) => {
       const value = this.queryString[key];
 
-      // 🚨 ignore empty / object / undefined
       if (
         value === undefined ||
         value === null ||
@@ -63,16 +65,55 @@ filter(): this {
 
       // -------- IN operator --------
       if (match[2] === 'in' && typeof rawValue === 'string') {
-        mongoFilter[field][operator] = rawValue
+        const values = rawValue
           .split(',')
           .map((v: string) => v.trim())
           .filter(Boolean);
+
+        mongoFilter[field][operator] = objectIdFields.includes(field)
+          ? values.map((v) => new Types.ObjectId(v))
+          : values;
+
+        return;
       }
 
       return;
     }
 
     // ================= NORMAL FILTER =================
+
+    // Boolean handling
+    if (queryObj[key] === 'true') {
+      mongoFilter[key] = true;
+      return;
+    }
+
+    if (queryObj[key] === 'false') {
+      mongoFilter[key] = false;
+      return;
+    }
+
+    // Number handling (for numeric fields)
+    const numericValue = Number(queryObj[key]);
+    const isNumeric = !isNaN(numericValue) && queryObj[key] !== '';
+
+    // ObjectId handling
+    if (objectIdFields.includes(key)) {
+      try {
+        mongoFilter[key] = new Types.ObjectId(queryObj[key]);
+      } catch {
+        // ignore invalid ObjectId
+      }
+      return;
+    }
+
+    // Number fallback
+    if (isNumeric && ['price', 'size', 'bedrooms', 'bathrooms', 'floor'].includes(key)) {
+      mongoFilter[key] = numericValue;
+      return;
+    }
+
+    // Default string filter
     mongoFilter[key] = queryObj[key];
   });
 
@@ -80,6 +121,9 @@ filter(): this {
 
   return this;
 }
+
+
+
 
   sort(): this {
     if (this.queryString.sort) {

@@ -36,8 +36,7 @@ export class AreasService {
 
   // ***************************************
   async findAll(query: buildQueryDto) {
-    const cached = await this.cacheManager.get('areas_all');
-    if (cached) return cached;
+ 
     const features = new ApiFeatures(this.repo.findMany({}), query)
       .filter()
       .search(['name',"location"]);
@@ -59,7 +58,7 @@ export class AreasService {
       data,
     };
 
-    await this.cacheManager.set('areas_all', result); 
+     
     return result;
   }
 

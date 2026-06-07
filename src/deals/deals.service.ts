@@ -56,7 +56,9 @@ export class DealsService {
       .find()
       .populate('unit', 'images unitCode type -_id')
       .populate('salesAgent', 'fullName -_id')
-      .populate('client', 'fullName -_id');
+      .populate('client', 'fullName -_id')
+      .populate('buyer', 'fullName -_id');
+
 
     const features = new ApiFeatures(mongooseQuery, queryDto)
       .filter()
