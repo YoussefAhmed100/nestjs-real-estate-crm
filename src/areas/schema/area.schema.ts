@@ -11,6 +11,7 @@ export class Area {
   @Prop({
     required: true,
     trim: true,
+    slug: 'name',
   })
   name: string; // B1, B2, B7
 
@@ -23,6 +24,7 @@ export class Area {
 
   @Prop({
     trim: true,
+    type: String,
   })
   description?: string;
 

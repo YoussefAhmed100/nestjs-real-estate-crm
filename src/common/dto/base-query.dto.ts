@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsNumberString, IsIn } from 'class-validator';
+import { IsOptional, IsString, IsNumberString, IsIn, IsBoolean } from 'class-validator';
 
 export class buildQueryDto {
 
@@ -198,6 +198,9 @@ export class buildQueryDto {
   @IsOptional()
   @IsString()
   unit?: string;
+  @IsOptional()
+  @IsBoolean()
+ showInWebsite?: boolean;
 
   @IsOptional()
   @IsString()

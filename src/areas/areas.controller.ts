@@ -1,18 +1,32 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+  Query,
+  UseGuards,
+} from '@nestjs/common';
 import { AreasService } from './areas.service';
 import { CreateAreaDto } from './dto/create-area.dto';
 import { UpdateAreaDto } from './dto/update-area.dto';
 import { buildQueryDto } from 'src/common/dto/base-query.dto';
 import { ParseObjectIdPipe } from '@nestjs/mongoose';
 
-import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { UserRole } from 'src/users/enums/roles.enum';
 import { Public } from 'src/common/decorators/public.decorator';
 @ApiTags('Areas')
 @ApiBearerAuth()
-
-@Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN,UserRole.SALES)
+@Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN, UserRole.SALES)
 @Controller('areas')
 export class AreasController {
   constructor(private readonly areasService: AreasService) {}
@@ -25,21 +39,17 @@ export class AreasController {
     return this.areasService.create(createAreaDto);
   }
 
- 
   @ApiOperation({ summary: 'Get all areas with filtering and pagination' })
   @Public()
-   @Get()
+  @Get()
   findAll(@Query() query: buildQueryDto) {
     return this.areasService.findAll(query);
   }
 
-  
   @ApiOperation({ summary: 'Get area by id' })
-   @Public()
-   @Get(':id')
-  findOne(
-    @Param('id', ParseObjectIdPipe) id: string,
-  ) {
+  @Public()
+  @Get(':id')
+  findOne(@Param('id', ParseObjectIdPipe) id: string) {
     return this.areasService.findOne(id);
   }
 
@@ -51,12 +61,12 @@ export class AreasController {
   ) {
     return this.areasService.update(id, updateAreaDto);
   }
-   @ApiOperation({ summary: 'Delete area' })
-@Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
-  @Delete(':id')
-  remove(
-    @Param('id', ParseObjectIdPipe) id: string,
-  ) {
-    return this.areasService.remove(id);
-  }
+  //    @ApiOperation({ summary: 'Delete area' })
+  // @Roles(UserRole.ADMIN, UserRole.SUPER_ADMIN)
+  //   @Delete(':id')
+  //   remove(
+  //     @Param('id', ParseObjectIdPipe) id: string,
+  //   ) {
+  //     return this.areasService.remove(id);
+  //   }
 }

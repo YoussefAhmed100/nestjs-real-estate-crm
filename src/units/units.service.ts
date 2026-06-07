@@ -6,18 +6,20 @@ import {
 } from '@nestjs/common';
 import { CreateUnitDto } from './dto/create-unit.dto';
 import { UpdateUnitDto } from './dto/update-unit.dto';
-import { Model, Types } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { Unit, UnitDocument } from './schema/unit.schema';
 import { UploadService } from 'src/common/storage/upload.service';
 import { ApiFeatures } from 'src/common/utils/api-features';
 import { buildQueryDto } from 'src/common/dto/base-query.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
+import { Area } from 'src/areas/schema/area.schema';
 
 @Injectable()
 export class UnitsService {
   constructor(
     @InjectModel(Unit.name) private readonly unitModel: Model<Unit>,
+    @InjectModel(Area.name) private readonly areaModel: Model<Area>,
     private readonly uploadService: UploadService,
     @Inject(CACHE_MANAGER) private cacheManager: any,
   ) {}
@@ -36,7 +38,6 @@ export class UnitsService {
     // 1 Upload images
     const images = await this.uploadService.upload(files);
 
-
     const unit = await this.unitModel.create({
       ...createUnitDto,
       area: new Types.ObjectId(createUnitDto.area),
@@ -51,8 +52,9 @@ export class UnitsService {
 
   // @desc-> find all
   async findAll(query: buildQueryDto) {
-    const cached = await this.cacheManager.get('units_all');
-    if (cached) return cached;
+    // const cached = await this.cacheManager.get('units_all');
+    // if (cached) return cached;
+    
     const features = new ApiFeatures(
       this.unitModel
         .find()
@@ -69,14 +71,22 @@ export class UnitsService {
     features.sort().limitFields().paginate(total);
 
     const data = await features.exec();
+    // *********************
+const result = await this.unitModel.find({
+  area: new mongoose.Types.ObjectId('69edd9bf85197f4ec755d721'),
+});
 
+console.log(result.length);
+
+ 
     const response = {
       results: data.length,
       pagination: features.paginationResult,
       data: data,
     };
 
-    await this.cacheManager.set('units_all', response);
+    // await this.cacheManager.set('units_all', response);
+
     return response;
   }
 
@@ -89,7 +99,8 @@ export class UnitsService {
       .findById(id)
       .populate('project', 'name -_id')
       .populate('area', 'name  location -_id')
-      .populate('client', 'fullName email phone-_id').lean();
+      .populate('client', 'fullName email phone-_id')
+      .lean();
     if (!unit) {
       throw new NotFoundException('Unit not found');
     }
@@ -124,14 +135,13 @@ export class UnitsService {
       incUpdate[`${newStatus}Units`] = 1;
     }
 
-      
-      if (updateUnitDto.area) {
-        updateUnitDto.area = new Types.ObjectId(updateUnitDto.area) as any;
-      }
-    
-      if (updateUnitDto.project) {
-        updateUnitDto.project = new Types.ObjectId(updateUnitDto.project) as any;
-      }
+    if (updateUnitDto.area) {
+      updateUnitDto.area = new Types.ObjectId(updateUnitDto.area) as any;
+    }
+
+    if (updateUnitDto.project) {
+      updateUnitDto.project = new Types.ObjectId(updateUnitDto.project) as any;
+    }
 
     Object.assign(unit, updateUnitDto);
     await unit.save();
@@ -154,29 +164,27 @@ export class UnitsService {
     return 'Unit deleted successfully';
   }
 
-
-async toggleShowInWebsite(unitId: string) {
-  const unit = await this.unitModel.findOneAndUpdate(
-    { _id: unitId },
-    [
-      {
-        $set: {
-          showInWebsite: { $not: "$showInWebsite" },
+  async toggleShowInWebsite(unitId: string) {
+    const unit = await this.unitModel.findOneAndUpdate(
+      { _id: unitId },
+      [
+        {
+          $set: {
+            showInWebsite: { $not: '$showInWebsite' },
+          },
         },
+      ],
+      {
+        returnDocument: 'after',
+        updatePipeline: true,
       },
-    ],
-    {
-      returnDocument: 'after',
-      updatePipeline: true, 
-    },
-  );
+    );
 
-  if (!unit) {
-    throw new NotFoundException('Unit not found');
-  }
+    if (!unit) {
+      throw new NotFoundException('Unit not found');
+    }
     await this.cacheManager.del(`unit:${unitId}`);
 
-  return unit;
-}
-
+    return unit;
+  }
 }
