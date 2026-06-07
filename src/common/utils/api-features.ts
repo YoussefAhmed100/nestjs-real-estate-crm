@@ -80,7 +80,6 @@ filter(): this {
       return;
     }
 
-    // ================= NORMAL FILTER =================
 
     // Boolean handling
     if (queryObj[key] === 'true') {

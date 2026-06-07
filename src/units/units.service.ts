@@ -19,7 +19,6 @@ import { Area } from 'src/areas/schema/area.schema';
 export class UnitsService {
   constructor(
     @InjectModel(Unit.name) private readonly unitModel: Model<Unit>,
-    @InjectModel(Area.name) private readonly areaModel: Model<Area>,
     private readonly uploadService: UploadService,
     @Inject(CACHE_MANAGER) private cacheManager: any,
   ) {}
@@ -52,8 +51,8 @@ export class UnitsService {
 
   // @desc-> find all
   async findAll(query: buildQueryDto) {
-    // const cached = await this.cacheManager.get('units_all');
-    // if (cached) return cached;
+    const cached = await this.cacheManager.get('units_all');
+    if (cached) return cached;
     
     const features = new ApiFeatures(
       this.unitModel
@@ -71,12 +70,7 @@ export class UnitsService {
     features.sort().limitFields().paginate(total);
 
     const data = await features.exec();
-    // *********************
-const result = await this.unitModel.find({
-  area: new mongoose.Types.ObjectId('69edd9bf85197f4ec755d721'),
-});
 
-console.log(result.length);
 
  
     const response = {
@@ -85,7 +79,7 @@ console.log(result.length);
       data: data,
     };
 
-    // await this.cacheManager.set('units_all', response);
+    await this.cacheManager.set('units_all', response);
 
     return response;
   }
