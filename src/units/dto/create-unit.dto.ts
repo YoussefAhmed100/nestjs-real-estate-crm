@@ -94,7 +94,8 @@ export class CreateUnitDto {
     example: 'John Doe',
   })
   @IsNotEmpty()
-  @IsString()
+  @IsMongoId()
+  @Exists('User')
   createdBy: string;
 
   // ================= COMMON =================

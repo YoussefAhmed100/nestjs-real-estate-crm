@@ -13,12 +13,13 @@ import { UploadService } from 'src/common/storage/upload.service';
 import { ApiFeatures } from 'src/common/utils/api-features';
 import { buildQueryDto } from 'src/common/dto/base-query.dto';
 import { CACHE_MANAGER } from '@nestjs/cache-manager';
-import { Area } from 'src/areas/schema/area.schema';
 
 @Injectable()
 export class UnitsService {
   constructor(
     @InjectModel(Unit.name) private readonly unitModel: Model<Unit>,
+
+      
     private readonly uploadService: UploadService,
     @Inject(CACHE_MANAGER) private cacheManager: any,
   ) {}
@@ -54,11 +55,14 @@ export class UnitsService {
     const cached = await this.cacheManager.get('units_all');
     if (cached) return cached;
     
+
+ 
     const features = new ApiFeatures(
       this.unitModel
         .find()
         .populate('project', 'name -_id')
         .populate('area', 'name  location -_id')
+        .populate('createdBy', 'fullName email phone images-_id')
         .lean(),
       query,
     )

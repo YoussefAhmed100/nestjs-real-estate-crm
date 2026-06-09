@@ -78,9 +78,10 @@ export class Unit {
   })
   paymentType: string;
   @Prop({
-    type: String,
+   type: Types.ObjectId,
+    ref: 'User',
   })
-  createdBy: string;
+  createdBy: Types.ObjectId;
 
   @Prop({ required: true, min: 0 })
   size: number;

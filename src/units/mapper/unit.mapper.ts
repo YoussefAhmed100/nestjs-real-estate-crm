@@ -18,6 +18,7 @@ export class UnitMapper {
       images: unit.images,
       notes: unit.notes,
       project: unit.project?.name,
+      createdBy: unit.createdBy,
       
       status: unit.status,
     };
