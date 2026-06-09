@@ -24,7 +24,7 @@ export class WebsiteUnitsService {
       .find({ showInWebsite: true })
       .populate('project', 'name -_id')
       .populate('area', 'name location -_id')
-      .populate('createdBy', 'fullName email phone images -_id ')
+      
       .lean();
   }
 
@@ -75,6 +75,7 @@ export class WebsiteUnitsService {
       })
       .populate('project', 'name -_id')
       .populate('area', 'name location -_id')
+      .populate('createdBy', 'fullName email phone images -_id ')
       .lean();
 
     if (!unit) {

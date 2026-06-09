@@ -62,7 +62,7 @@ export class UnitsService {
         .find()
         .populate('project', 'name -_id')
         .populate('area', 'name  location -_id')
-        .populate('createdBy', 'fullName email phone images-_id')
+        
         .lean(),
       query,
     )
@@ -98,6 +98,7 @@ export class UnitsService {
       .populate('project', 'name -_id')
       .populate('area', 'name  location -_id')
       .populate('client', 'fullName email phone-_id')
+      .populate('createdBy', 'fullName email phone images -_id ')
       .lean();
     if (!unit) {
       throw new NotFoundException('Unit not found');
