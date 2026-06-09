@@ -20,7 +20,7 @@ export class ApiFeatures<T> implements IQueryBuilder<T> {
 filter(): this {
   const excluded = ['page', 'sort', 'limit', 'fields', 'keyword'];
 
-  const objectIdFields = ['area', 'project', 'client', 'unit', 'salesAgent', 'assignedTo'];
+  const objectIdFields = ['area', 'project', 'client', 'unit', 'salesAgent', 'assignedTo', 'createdBy'];
 
   const queryObj = Object.keys(this.queryString)
     .filter((key) => !excluded.includes(key))
