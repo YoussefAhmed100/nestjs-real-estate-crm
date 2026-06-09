@@ -1,8 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Unit, UnitDocument } from './schema/unit.schema';
@@ -17,31 +13,30 @@ export class WebsiteUnitsService {
   constructor(
     @InjectModel(Unit.name)
     private readonly unitModel: Model<UnitDocument>,
+  
 
     @Inject(CACHE_MANAGER)
     private readonly cacheManager: any,
   ) {}
-
 
   private basePublicQuery() {
     return this.unitModel
       .find({ showInWebsite: true })
       .populate('project', 'name -_id')
       .populate('area', 'name location -_id')
+      .populate('createdBy', 'fullName email phone images -_id ')
       .lean();
   }
 
- 
   async findAll(query: buildQueryDto) {
     const cacheKey = `units_public_${objectHash(query)}`;
 
     const cached = await this.cacheManager.get(cacheKey);
     if (cached) return cached;
 
-    const features = new ApiFeatures(
-      this.basePublicQuery(),
-      query,
-    )
+
+
+    const features = new ApiFeatures(this.basePublicQuery(), query)
       .filter()
       .search(['type', 'notes', 'price', 'size']);
 
@@ -51,7 +46,10 @@ export class WebsiteUnitsService {
 
     const units = await features.exec();
 
+
     const mappedUnits = UnitMapper.toPublicList(units);
+
+
 
     const response = {
       results: mappedUnits.length,
@@ -63,7 +61,6 @@ export class WebsiteUnitsService {
 
     return response;
   }
-
 
   async findOne(id: string) {
     const cacheKey = `unit_public_${id}`;
