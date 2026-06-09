@@ -42,6 +42,7 @@ export class UnitsService {
       ...createUnitDto,
       area: new Types.ObjectId(createUnitDto.area),
       project: new Types.ObjectId(createUnitDto.project),
+      createdBy: new Types.ObjectId(createUnitDto.createdBy),
       images,
     });
     // @apply caching
